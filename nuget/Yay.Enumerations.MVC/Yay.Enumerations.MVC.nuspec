@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Yay.Enumeration.MVC</id>
+    <version>0.5.1</version>
+    <authors>Justin Pope</authors>
+    <owners>Justin Pope</owners>
+    <projectUrl>http://yayenumerations.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Beta release of the basic enumeration class add on features for using with MVC. Tested with MVC3.</description>
+    <releaseNotes>Added display template for EnumerationBase.</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>yay enumeration mvc mvc3 mvc4</tags>
+    <dependencies>
+      <dependency id="Yay.Enumeration" version="0.5.1" />
+    </dependencies>
+  </metadata>
+</package>

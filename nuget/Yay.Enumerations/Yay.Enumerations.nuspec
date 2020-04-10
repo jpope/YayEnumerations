@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Yay.Enumeration</id>
+    <version>0.5.1</version>
+    <authors>Justin Pope</authors>
+    <owners>Justin Pope</owners>
+    <projectUrl>http://yayenumerations.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Beta release of the basic enumeration class, as well as common helper methods.</description>
+    <releaseNotes>Fixes an issue with equality.</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>yay enumeration</tags>
+  </metadata>
+</package>
