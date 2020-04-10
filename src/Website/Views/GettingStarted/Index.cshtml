@@ -1,0 +1,41 @@
+﻿@model dynamic
+
+@{
+	ViewBag.Title = "Getting Started with Yay Enumerations";
+}
+
+<h2>Getting Started</h2>
+
+<p>
+	Getting started with Yay Enumerations is easy. What is Yay Enumerations? Check out the <a href="http://www.justincpope.com/presentations/enumeration-the-class/adnug/Enumeration-the-class-lightning-talk.pdf">presentation slides from my ADNUG talk</a>.
+</p>
+<ol>
+	<li>
+		Use nuget to get the Package for Yay.Enumerations.MVC @Html.ActionLink("Help with Nuget", "UsingNuget")
+		<br/>
+		This will install the Yay.Enumerations.dll, as well as Yay.Enumerations.Mvc.dll and it's necessary files.
+	</li>
+	<li>
+		<b>It won't work quite out of the box though, you need to handle model binding.</b> There is no safe way to comprehensively handle setting the model binder for you, so I leave that to the user.
+		You can use the CompositeModelBinder from Yay.Enumerations.Mvc (recommended), or write your own. To use the custom model binder from Yay.Enumerations.Mvc:
+		<script src="https://gist.github.com/jpope/4774049.js"></script>
+	</li>
+	<li>
+		Create an enumeration, or use one you have already created. Here's a sample used by the demo site:
+		<script src="https://gist.github.com/jpope/4774025.js"></script>
+	</li>
+	<li>
+		Create a controller/action/model. A sample viewmodel used in the site is shown below. You can chose a DropDownList or RadioButtonList to tell it what editor to use. Here I've chosen a drop down list:
+		<script src="https://gist.github.com/jpope/4774080.js"></script>
+	</li>
+	<li>
+		Use Html.EditorFor in your view, such as below:
+		<script src="https://gist.github.com/jpope/4774234.js"></script>
+	</li>
+	<li>
+		I hope that hastily written description is enough of a bare minimum to get started. Explore the options for DropDownList, RadioButtonList, Deprecated, custom options providers etc.
+	</li>
+	<li>
+		Have fun!
+	</li>
+</ol>

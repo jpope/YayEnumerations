@@ -1,0 +1,28 @@
+﻿@model Website.Models.SandboxIndexModel
+
+@{
+	ViewBag.Title = "Sandbox Testing";
+}
+
+<h2>Sandbox</h2>
+
+@using(Html.BeginForm()) {
+
+	@Html.ValidationSummary("What??")
+
+	<h3>Drop Down Samples</h3>
+	@: Normal: @Html.EditorFor(x => x.SampleNormal)<br/><br/>
+	@: Dep: @Html.EditorFor(x => x.SampleDeprecated)<br/><br/>
+	@: Null: @Html.EditorFor(x => x.SampleNoValue)<br/><br/>
+	@: Null No Blank: @Html.EditorFor(x => x.SampleNoValNoBlank)<br/><br/>
+	@: Custom (Dep Only): @Html.EditorFor(x => x.SampleCustomDeprecatedOnly)<br/><br/>
+
+	<h3>Radio Samples</h3>
+	@: Normal: @Html.EditorFor(x => x.RadiosSampleNormal)<br/><br/>
+	@: Null: @Html.EditorFor(x => x.RadiosSampleNoValue)<br/><br/>
+	@: Dep: @Html.EditorFor(x => x.RadiosSampleDeprecated)<br/><br/>
+	@: Vert: @Html.EditorFor(x => x.RadiosSampleVertical)<br/><br/>
+	@: Horizontal: @Html.EditorFor(x => x.RadiosSampleHorizontal)<br/><br/>
+
+	<input type="submit"/>
+}

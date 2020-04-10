@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Website.Models.EnumerationModel>
+
+@{
+    ViewBag.Title = "Enumerations";
+}
+
+<style type="text/css">
+	.deprecated 
+	{
+		color: #bbb;
+		text-decoration: line-through;
+	}
+</style>
+
+<h1>Enumerations</h1>
+
+@foreach (var enumeration in Model)
+{
+	<h3>@enumeration.Name</h3>
+	<table class="enumeration-value-list">
+		<thead>
+			<tr>
+			@foreach (var name in enumeration.PropertyNames)
+			{
+				<th>@name</th>
+			}
+			</tr>
+		</thead>
+		<tbody>
+		@foreach (var enumerationProperty in enumeration.PropertyValues)
+		{
+			<tr class="@(enumerationProperty.IsDeprecated ? "deprecated" : string.Empty)">
+			@foreach (var value in enumerationProperty.PropertyValues)
+			{
+				<td>@value</td>
+			}
+			</tr>
+		}
+		</tbody>
+	</table>
+}

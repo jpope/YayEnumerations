@@ -1,0 +1,18 @@
+﻿@using Website
+
+@model Website.Models.EmployeeEditModel
+
+@{
+	ViewBag.Title = "Create New Employee";
+}
+
+<h2>Create Employee</h2>
+
+@using(Html.BeginForm()){
+	
+	@Html.HiddenFor(x => x.Id)
+	@:Name: @Html.TextBoxFor(x => x.FirstName)<br/>
+	@:Type: @Html.EditorFor(x => x.EmployeeType)<br/>
+
+	<input type="submit" value="Save" />
+}
