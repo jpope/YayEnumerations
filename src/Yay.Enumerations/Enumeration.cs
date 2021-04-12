@@ -7,35 +7,7 @@ using System.Reflection;
 
 namespace Yay.Enumerations
 {
-	public interface IEnumeration
-	{
-		int Value { get; }
-		string DisplayName { get; }
-	}
-
-	public abstract class EnumerationBase
-	{
-		private int _value;
-		private string _displayName;
-
-		protected EnumerationBase(int value, string displayName)
-		{
-			_value = value;
-			_displayName = displayName;
-		}
-
-		public int Value
-		{
-			get { return _value; }
-		}
-
-		public string DisplayName
-		{
-			get { return _displayName; }
-		}
-	}
-
-	[Serializable]
+    [Serializable]
 	[DebuggerDisplay("{DisplayName} - {Value}")]
 	public abstract class Enumeration<T> : EnumerationBase, IComparable<T>, IEquatable<T>, IEnumeration where T : Enumeration<T>
 	{
