@@ -36,7 +36,7 @@ namespace Yay.Enumerations
 
 		public static T FromDisplayName(string displayName)
 		{
-			var matchingItem = Find(displayName, "display name", x => x.DisplayName == displayName);
+			var matchingItem = GetAll().FirstOrDefault(x => x.DisplayName == displayName);
 
 			return matchingItem;
 		}
