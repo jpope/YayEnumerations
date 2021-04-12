@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Yay.Enumerations\Yay.Enumerations.csproj" />
+    <ProjectReference Include="..\Yay.Enumerations\Yay.Enumerations.csproj" />
   </ItemGroup>
 
 </Project>

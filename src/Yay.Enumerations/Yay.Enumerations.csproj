@@ -5,7 +5,13 @@
 	<PackageId>Yay.Enumeration</PackageId>
 	<Version>0.6.1</Version>
 	<Authors>Justin Pope</Authors>
-	<Company>Justin Pope</Company>
+	<projectUrl>https://github.com/jpope/YayEnumerations</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>	
+    <description>Beta release of the basic enumeration class, updated for netstandard2.0.</description>
+    <releaseNotes>Updated for netstandard2.0</releaseNotes>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <copyright>Copyright 2013-2020</copyright>
+    <tags>yay enumeration</tags>
   </PropertyGroup>
 
 </Project>
