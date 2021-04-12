@@ -28,8 +28,7 @@ task help {
 #These are the actual build tasks. They should be Pascal case by convention
 task InitialPrivateBuild -depends Clean, Compile
 
-
-task Nuget -depends SetReleaseBuild, Clean, Compile, PackageYayCore
+task Nuget -depends SetReleaseBuild, Clean, Compile
 
 task SetReleaseBuild {
     $script:project_config = "Release"
@@ -38,7 +37,6 @@ task SetReleaseBuild {
 task CommonAssemblyInfo {
     create-commonAssemblyInfo "$version" $project_name "$source_dir\CommonAssemblyInfo.cs"
 }
-
 
 task Compile -depends Clean { 
     exec { dotnet build .\\src\\Yay.Enumerations --configuration $configuration /nologo }
@@ -50,19 +48,6 @@ task Clean {
     create_directory $test_dir 
     create_directory $result_dir
     create_directory $package_dir
-}
-
-task PackageYayCore -depends SetReleaseBuild, Compile {
-    delete_directory $temp_package_dir
-
-    #dlls
-    copy_files "$source_dir\Yay.Enumerations\bin\Release\" "$temp_package_dir\lib"
-
-	#nuget spec (and any other needed nuget thing)
-	copy_files "$base_dir\nuget\Yay.Enumerations\" "$temp_package_dir"
-    
-	$nuspec_file = "$temp_package_dir\Yay.Enumerations.nuspec"
-	package-for-nuget $nuspec_file $package_dir
 }
 
 task WarnSlowBuild {
@@ -111,9 +96,6 @@ function Write-Help-For-Alias($alias,$description) {
 # -------------------------------------------------------------------------------------------------------------
 # generalized functions 
 # --------------------------------------------------------------------------------------------------------------
-function package-for-nuget($nuspec_file,$package_dir) {
-    exec { & .\tools\NuGet.exe pack $nuspec_file -OutputDirectory $package_dir }
-}
 
 function run_tests([string]$pattern) {
     
@@ -141,70 +123,10 @@ function global:create_directory($directory_name) {
   mkdir $directory_name  -ErrorAction SilentlyContinue  | out-null
 }
 
-function global:run_nunit ($test_assembly) {
-	$assembly_to_test = $test_dir + "\" + $test_assembly
-	$results_output = $result_dir + "\" + $test_assembly + ".xml"
-    write-host "Running NUnit Tests in: " $test_assembly
-    exec { & lib\nunit\nunit-console-x86.exe $assembly_to_test /nologo /nodots /xml=$results_output /exclude=DataLoader}
-}
-
-function global:load_test_data ($test_assembly) {
-	$assembly_to_test = $test_dir + "\" + $test_assembly
-    write-host "Running DataLoader NUnit Tests in: " $test_assembly
-    exec { & lib\nunit\nunit-console-x86.exe $assembly_to_test /nologo /nodots /include=DataLoader}
-}
-
-function global:Copy_and_flatten ($source,$include,$dest) {
-	ls $source -include $include -r | cp -dest $dest
-}
-
-function global:copy_all_assemblies_for_test($destination){
-	$bin_dir_match_pattern = "$source_dir\*\bin\$project_config"
-	create_directory $destination
-	Copy_and_flatten $bin_dir_match_pattern *.exe $destination
-	Copy_and_flatten $bin_dir_match_pattern *.dll $destination
-	Copy_and_flatten $bin_dir_match_pattern *.config $destination
-	Copy_and_flatten $bin_dir_match_pattern *.pdb $destination
-	Copy_and_flatten $bin_dir_match_pattern *.sql $destination
-	Copy_and_flatten $bin_dir_match_pattern *.xlsx $destination
-}
-
-function global:copy_website_files($source,$destination){
-    $exclude = @('*.user','*.dtd','*.tt','*.cs','*.csproj') 
-    copy_files $source $destination $exclude
-	delete_directory "$destination\obj"
-}
 
 function global:copy_files($source,$destination,$exclude=@()){    
     create_directory $destination
     Get-ChildItem $source -Recurse -Exclude $exclude | Copy-Item -Destination {Join-Path $destination $_.FullName.Substring($source.length)} 
-}
-
-function global:Convert-WithXslt($originalXmlFilePath, $xslFilePath, $outputFilePath) {
-   ## Simplistic error handling
-   $xslFilePath = resolve-path $xslFilePath
-   if( -not (test-path $xslFilePath) ) { throw "Can't find the XSL file" } 
-   $originalXmlFilePath = resolve-path $originalXmlFilePath
-   if( -not (test-path $originalXmlFilePath) ) { throw "Can't find the XML file" } 
-   #$outputFilePath = resolve-path $outputFilePath -ErrorAction SilentlyContinue 
-   if( -not (test-path (split-path $originalXmlFilePath)) ) { throw "Can't find the output folder" } 
-
-   ## Get an XSL Transform object (try for the new .Net 3.5 version first)
-   $EAP = $ErrorActionPreference
-   $ErrorActionPreference = "SilentlyContinue"
-   $script:xslt = new-object system.xml.xsl.xslcompiledtransform
-   trap [System.Management.Automation.PSArgumentException] 
-   {  # no 3.5, use the slower 2.0 one
-      $ErrorActionPreference = $EAP
-      $script:xslt = new-object system.xml.xsl.xsltransform
-   }
-   $ErrorActionPreference = $EAP
-   
-   ## load xslt file
-   $xslt.load( $xslFilePath )
-     
-   ## transform 
-   $xslt.Transform( $originalXmlFilePath, $outputFilePath )
 }
 
 function global:create-commonAssemblyInfo($version,$applicationName,$filename) {
@@ -231,61 +153,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersionAttribute(""$version"")]"  | out-file $filename -encoding "ASCII"    
 }
 
-
-function script:poke-xml($filePath, $xpath, $value, $namespaces = @{}) {
-    [xml] $fileXml = Get-Content $filePath
-    
-    if($namespaces -ne $null -and $namespaces.Count -gt 0) {
-        $ns = New-Object Xml.XmlNamespaceManager $fileXml.NameTable
-        $namespaces.GetEnumerator() | %{ $ns.AddNamespace($_.Key,$_.Value) }
-        $node = $fileXml.SelectSingleNode($xpath,$ns)
-    } else {
-        $node = $fileXml.SelectSingleNode($xpath)
-    }
-    
-    Assert ($node -ne $null) "could not find node @ $xpath"
-        
-    if($node.NodeType -eq "Element") {
-        $node.InnerText = $value
-    } else {
-        $node.Value = $value
-    }
-
-    $fileXml.Save($filePath) 
-}
-
-function usingx {
-    param (
-        $inputObject = $(throw "The parameter -inputObject is required."),
-        [ScriptBlock] $scriptBlock
-    )
-
-    if ($inputObject -is [string]) {
-        if (Test-Path $inputObject) {
-            [void][system.reflection.assembly]::LoadFrom($inputObject)
-        } elseif($null -ne (
-              new-object System.Reflection.AssemblyName($inputObject)
-              ).GetPublicKeyToken()) {
-            [void][system.reflection.assembly]::Load($inputObject)
-        } else {
-            [void][system.reflection.assembly]::LoadWithPartialName($inputObject)
-        }
-    } elseif ($inputObject -is [System.IDisposable] -and $scriptBlock -ne $null) {
-        Try {
-            &$scriptBlock
-        } Finally {
-            if ($inputObject -ne $null) {
-                $inputObject.Dispose()
-            }
-            Get-Variable -scope script |
-                Where-Object {
-                    [object]::ReferenceEquals($_.Value.PSBase, $inputObject.PSBase)
-                } |
-                Foreach-Object {
-                    Remove-Variable $_.Name -scope script
-                }
-        }
-    } else {
-        $inputObject
-    }
-}

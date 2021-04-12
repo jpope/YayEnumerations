@@ -2,15 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageId>Yay.Enumeration</PackageId>
-	<Version>0.6.1</Version>
+	<Version>0.6.2</Version>
 	<Authors>Justin Pope</Authors>
 	<projectUrl>https://github.com/jpope/YayEnumerations</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>	
     <description>Beta release of the basic enumeration class, updated for netstandard2.0.</description>
-    <releaseNotes>Updated for netstandard2.0</releaseNotes>
+    <releaseNotes>Fixes stack overflow exception for FromDisplayName()</releaseNotes>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <copyright>Copyright 2013-2020</copyright>
+    <copyright>Copyright 2013-2021</copyright>
     <tags>yay enumeration</tags>
   </PropertyGroup>
 
